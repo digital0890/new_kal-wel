@@ -1,0 +1,11 @@
+pandas
+numpy
+pytz
+pykalman
+yfinance
+plotly
+scipy
+PyWavelets
+scikit-learn
+streamlit
+streamlit-components
