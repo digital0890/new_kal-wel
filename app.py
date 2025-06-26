@@ -523,6 +523,225 @@ def compute_extrema_and_averages(residuals, method_type):
     }
 
 # تابع اصلی تحلیل
+# -*- coding: utf-8 -*-
+import pandas as pd
+import numpy as np
+import pytz
+from pykalman import KalmanFilter
+import yfinance as yf
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+from scipy.signal import argrelextrema
+import os
+import pywt
+import streamlit.components.v1 as components
+
+# جایگزینی ایمن برای import pad
+try:
+    from pywt._dwt import pad
+except ImportError:
+    from pywt._doc_utils import pad
+
+from sklearn.metrics import mean_squared_error
+import warnings
+import streamlit as st
+from datetime import datetime
+import time
+
+# تنظیمات اولیه
+warnings.filterwarnings("ignore", category=UserWarning)
+np.random.seed(42)
+
+# تزریق استایل حرفه‌ای
+def inject_pro_style():
+    pro_css = """
+    <style>
+        /* استایل‌های قبلی بدون تغییر باقی می‌مانند */
+    </style>
+    """
+    st.markdown(pro_css, unsafe_allow_html=True)
+    
+    # Hero Section
+    st.markdown("""
+    <div class="main-container">
+        <div class="hero animate-fade">
+        </div>
+    """, unsafe_allow_html=True)
+
+# تبدیل تاریخ به فرمت آگاه از منطقه زمانی
+def make_timezone_aware(dt, timezone_str):
+    tz = pytz.timezone(timezone_str)
+    if dt.tzinfo is None or dt.tzinfo.utcoffset(dt) is None:
+        return tz.localize(dt)
+    else:
+        return dt.astimezone(tz)
+
+# دانلود داده‌ها
+def download_filtered_data(symbol, start_datetime, end_datetime, interval, timezone=None):
+    start_dt = pd.to_datetime(start_datetime)
+    end_dt = pd.to_datetime(end_datetime)
+
+    if timezone:
+        start_dt = make_timezone_aware(start_dt, timezone)
+        end_dt = make_timezone_aware(end_dt, timezone)
+
+    data = yf.download(
+        symbol,
+        start=start_dt.date().isoformat(),
+        end=(end_dt + pd.Timedelta(days=1)).date().isoformat(),
+        interval=interval
+    )
+
+    data.index = pd.to_datetime(data.index)
+
+    if timezone:
+        if data.index.tz is None:
+            data.index = data.index.tz_localize('UTC')
+        data.index = data.index.tz_convert(timezone)
+    else:
+        data.index = data.index.tz_localize(None)
+
+    data = data.loc[(data.index >= start_dt) & (data.index <= end_dt)]
+
+    data.rename(columns={
+        'Open': f'Open_{symbol}',
+        'High': f'High_{symbol}',
+        'Low': f'Low_{symbol}',
+        'Close': f'Close_{symbol}',
+        'Volume': f'Volume_{symbol}'
+    }, inplace=True)
+
+    if 'Adj Close' in data.columns:
+        data.drop(columns=['Adj Close'], inplace=True)
+
+    return data
+
+# یافتن قله‌ها و دره‌ها
+def find_peaks_valleys(residuals, window=5):
+    peaks = []
+    valleys = []
+    
+    for i in range(window, len(residuals) - window):
+        if all(residuals[i] > residuals[i-j] for j in range(1, window+1)) and \
+           all(residuals[i] > residuals[i+j] for j in range(1, window+1)):
+            peaks.append(i)
+        
+        if all(residuals[i] < residuals[i-j] for j in range(1, window+1)) and \
+           all(residuals[i] < residuals[i+j] for j in range(1, window+1)):
+            valleys.append(i)
+    
+    return peaks, valleys
+
+# محاسبه روند با ویولت
+def compute_wavelet_trend(signal):
+    wavelets = ['db4', 'sym5', 'coif3', 'bior3.3', 'haar']
+    results = {}
+    
+    if len(signal) > 10:
+        wavelet_temp = pywt.Wavelet('db4')
+        max_lvl = pywt.dwt_max_level(len(signal), wavelet_temp.dec_len)
+        level = max(1, min(max_lvl - 1, 5))
+    else:
+        level = 1
+
+    for wavelet_name in wavelets:
+        try:
+            padded_length = 2**level - len(signal) % 2**level if len(signal) % 2**level != 0 else 0
+            signal_padded = pad(signal, (0, padded_length), 'symmetric')
+            
+            coeffs = pywt.wavedec(signal_padded, wavelet_name, mode='periodization', level=level)
+            
+            uthresh_coeffs = []
+            for c in coeffs[1:]:
+                if len(c) > 0:
+                    sigma = np.median(np.abs(c)) / 0.6745
+                    uthresh = sigma * np.sqrt(2 * np.log(len(c)))
+                    uthresh_coeffs.append(uthresh)
+                else:
+                    uthresh_coeffs.append(0)
+            
+            coeffs_thresh = [coeffs[0]]
+            for i in range(1, len(coeffs)):
+                coeffs_thresh.append(pywt.threshold(coeffs[i], uthresh_coeffs[i-1], mode='soft'))
+            
+            trend_padded = pywt.waverec(coeffs_thresh, wavelet_name, mode='periodization')
+            trend = trend_padded[:len(signal)]
+            
+            mse = mean_squared_error(signal, trend)
+            results[wavelet_name] = mse
+            
+        except Exception:
+            results[wavelet_name] = float('inf')
+    
+    best_wavelet = min(results, key=results.get) if results else 'db4'
+    
+    try:
+        padded_length = 2**level - len(signal) % 2**level if len(signal) % 2**level != 0 else 0
+        signal_padded = pad(signal, (0, padded_length), 'symmetric')
+        
+        coeffs = pywt.wavedec(signal_padded, best_wavelet, mode='periodization', level=level)
+        
+        uthresh_coeffs = []
+        for c in coeffs[1:]:
+            if len(c) > 0:
+                sigma = np.median(np.abs(c)) / 0.6745
+                uthresh = sigma * np.sqrt(2 * np.log(len(c)))
+                uthresh_coeffs.append(uthresh)
+            else:
+                uthresh_coeffs.append(0)
+        
+        coeffs_thresh = [coeffs[0]]
+        for i in range(1, len(coeffs)):
+            coeffs_thresh.append(pywt.threshold(coeffs[i], uthresh_coeffs[i-1], mode='soft'))
+        
+        trend_padded = pywt.waverec(coeffs_thresh, best_wavelet, mode='periodization')
+        trend = trend_padded[:len(signal)]
+        
+        return trend, best_wavelet, level
+    except Exception:
+        return signal, 'db4', 1
+
+# محاسبه اکسترمم‌ها و میانگین‌ها
+def compute_extrema_and_averages(residuals, method_type):
+    if method_type == 'kalman':
+        peaks_idx = argrelextrema(residuals, np.greater, order=3)[0]
+        valleys_idx = argrelextrema(residuals, np.less, order=3)[0]
+    else:
+        peaks_idx, valleys_idx = find_peaks_valleys(residuals, window=5)
+
+    peaks = residuals[peaks_idx]
+    valleys = residuals[valleys_idx]
+
+    mean_peak = np.mean(peaks) if len(peaks) > 0 else 0
+    mean_valley = np.mean(valleys) if len(valleys) > 0 else 0
+
+    high_peaks = [p for p in peaks if p > mean_peak] if len(peaks) > 0 else []
+    low_valleys = [v for v in valleys if v < mean_valley] if len(valleys) > 0 else []
+
+    mean_high_peak = np.mean(high_peaks) if len(high_peaks) > 0 else mean_peak
+    mean_low_valley = np.mean(low_valleys) if len(low_valleys) > 0 else mean_valley
+    
+    filtered_peaks_idx = [i for i in peaks_idx if residuals[i] > mean_peak]
+    filtered_valleys_idx = [i for i in valleys_idx if residuals[i] < mean_valley]
+    filtered_peaks = residuals[filtered_peaks_idx]
+    filtered_valleys = residuals[filtered_valleys_idx]
+
+    return {
+        'peaks_idx': peaks_idx,
+        'valleys_idx': valleys_idx,
+        'peaks': peaks,
+        'valleys': valleys,
+        'mean_peak': mean_peak,
+        'mean_valley': mean_valley,
+        'mean_high_peak': mean_high_peak,
+        'mean_low_valley': mean_low_valley,
+        'filtered_peaks_idx': filtered_peaks_idx,
+        'filtered_valleys_idx': filtered_valleys_idx,
+        'filtered_peaks': filtered_peaks,
+        'filtered_valleys': filtered_valleys
+    }
+
+# تابع اصلی تحلیل
 def run_analysis(symbol, start_date, start_hour, start_minute, end_date, end_hour, end_minute, interval, 
                  initial_state_mean, auto_initial_state, show_main, show_residual, show_orig_candle, show_filt_candle,
                  method, uploaded_file=None):
@@ -553,6 +772,16 @@ def run_analysis(symbol, start_date, start_hour, start_minute, end_date, end_hou
                     data[col] = pd.to_numeric(data[col], errors='coerce')
                 data.dropna(subset=[close_col], inplace=True)
                 
+                # 1. بررسی کافی بودن داده‌ها
+                if len(data) < 5:
+                    st.error("❌ Insufficient data points (less than 5). Please provide more data.")
+                    return
+                    
+                # 2. بررسی مقادیر نامعتبر
+                if np.isinf(data[close_col]).any():
+                    st.error("❌ Infinite values found in data. Please check your data source.")
+                    return
+                    
                 st.success("✅ Data processed successfully")
         except Exception as e:
             st.error(f"Error processing uploaded file: {e}")
@@ -574,16 +803,29 @@ def run_analysis(symbol, start_date, start_hour, start_minute, end_date, end_hou
                 
                 data = download_filtered_data(symbol, start_datetime, end_datetime, interval, timezone)
                 close_col = f'Close_{symbol}'
+                
+                # 1. بررسی کافی بودن داده‌ها
+                if len(data) < 5:
+                    st.error("❌ Insufficient data points (less than 5). Please select a wider time range.")
+                    return
+                    
+                # 2. بررسی مقادیر نامعتبر
+                if data[close_col].isnull().any():
+                    data.dropna(subset=[close_col], inplace=True)
+                    
+                if np.isinf(data[close_col]).any():
+                    st.error("❌ Infinite values found in data. Please try a different symbol or time range.")
+                    return
+                    
                 st.success(f"✅ Data for {symbol} downloaded successfully")
         except Exception as e:
             st.error(f"Error downloading data: {e}")
             return
 
-    # مقداردهی اولیه initial_state_mean برای هر دو حالت Yahoo و آپلود فایل
+    # مقداردهی اولیه initial_state_mean
     if (method == 'Kalman' or method == 'Kalman+Wavelet') and len(data) > 0:
         if auto_initial_state:
             initial_state_mean = data[close_col].iloc[0]
-        # else: مقدار initial_state_mean همان مقدار ورودی کاربر باقی می‌ماند
 
     # تحلیل بر اساس روش انتخابی
     analysis_method = method
@@ -596,6 +838,12 @@ def run_analysis(symbol, start_date, start_hour, start_minute, end_date, end_hou
         if method == 'Kalman':
             try:
                 observations = data[close_col].values.reshape(-1, 1)
+                
+                # 3. بررسی ابعاد داده‌ها
+                if observations.shape[0] < 2 or observations.shape[1] != 1:
+                    st.error("❌ Invalid data shape for Kalman filter. Expected (N,1) array.")
+                    return
+                
                 kf = KalmanFilter(
                     transition_matrices=[[1.0, 1.0], [0.0, 1.0]],
                     observation_matrices=[[1.0, 0.0]],
@@ -627,6 +875,12 @@ def run_analysis(symbol, start_date, start_hour, start_minute, end_date, end_hou
         elif method == 'Kalman+Wavelet':
             try:
                 observations = data[close_col].values.reshape(-1, 1)
+                
+                # 3. بررسی ابعاد داده‌ها
+                if observations.shape[0] < 2 or observations.shape[1] != 1:
+                    st.error("❌ Invalid data shape for Kalman filter. Expected (N,1) array.")
+                    return
+                
                 kf = KalmanFilter(
                     transition_matrices=[[1.0, 1.0], [0.0, 1.0]],
                     observation_matrices=[[1.0, 0.0]],
