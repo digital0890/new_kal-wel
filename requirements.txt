@@ -5,6 +5,7 @@ pykalman
 yfinance
 plotly
 scipy
-pywt
+PyWavelets
 scikit-learn
-streamlit 
+streamlit
+extra-streamlit-components 
