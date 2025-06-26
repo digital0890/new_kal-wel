@@ -31,322 +31,242 @@ np.random.seed(42)
 def inject_pro_style():
     pro_css = """
     <style>
-        /* Reset و پایه */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
+        /* Modern Glassmorphism & Vibrant Gradient Theme */
         :root {
             --primary: #6366f1;
             --primary-dark: #4f46e5;
             --secondary: #10b981;
             --accent: #8b5cf6;
-            --dark: #0f172a;
-            --darker: #0c1220;
+            --dark: #181c25;
+            --darker: #10131c;
             --light: #f1f5f9;
             --gray: #94a3b8;
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
-            --card-bg: rgba(15, 23, 42, 0.7);
-            --card-border: rgba(255, 255, 255, 0.08);
+            --card-bg: rgba(24, 28, 37, 0.85);
+            --card-border: rgba(255, 255, 255, 0.10);
+            --glass-blur: 18px;
+        }
+        html, body, .stApp {
+            min-height: 100vh;
+            color: var(--light);
+            /* Animated gradient background */
+            background: linear-gradient(270deg, #232946, #6366f1, #8b5cf6, #10b981, #232946);
+            background-size: 400% 400%;
+            animation: animatedGradientBG 18s ease infinite;
+        }
+        @keyframes animatedGradientBG {
+            0% {background-position: 0% 50%;}
+            25% {background-position: 50% 100%;}
+            50% {background-position: 100% 50%;}
+            75% {background-position: 50% 0%;}
+            100% {background-position: 0% 50%;}
         }
         .stApp {
-            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 50%, #1e293b 100%);
-            background-attachment: fixed;
-            color: var(--light);
-            min-height: 100vh;
+            font-family: 'Inter', 'Segoe UI', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: none;
         }
-        header {
-            background: linear-gradient(90deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.8) 100%);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            border-bottom: 1px solid var(--card-border);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        header.modern-header {
+            width: 100vw;
+            background: linear-gradient(90deg, #232946 0%, #6366f1 100%);
+            box-shadow: 0 4px 24px rgba(99,102,241,0.10);
+            padding: 1.2rem 0;
             position: sticky;
             top: 0;
-            z-index: 100;
-        }
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .logo-icon {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
+            z-index: 1000;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
         }
-        .logo-text {
-            font-size: 1.5rem;
-            font-weight: 700;
+        .modern-header-content {
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+        .modern-logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .modern-logo-icon {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 18px rgba(99,102,241,0.18);
+        }
+        .modern-logo-text {
+            font-size: 2rem;
+            font-weight: 800;
             background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-        .nav-link {
-            color: var(--light);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 1rem;
-            position: relative;
-            padding: 0.5rem 0;
-            transition: all 0.3s ease;
-        }
-        .nav-link:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            transition: width 0.3s ease;
-        }
-        .nav-link:hover {
-            color: var(--primary);
-        }
-        .nav-link:hover:after {
-            width: 100%;
-        }
         .main-container {
             max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 2rem;
-        }
-        .hero {
-            text-align: center;
-            padding: 3rem 0;
-            margin-bottom: 3rem;
-        }
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            background: linear-gradient(90deg, var(--light) 0%, var(--gray) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--gray);
-            max-width: 700px;
-            margin: 0 auto 2rem;
-            line-height: 1.6;
+            margin: 2.5rem auto 2rem auto;
+            padding: 0 2.5rem;
         }
         .card {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            margin-bottom: 1.5rem;
+            border: 1.5px solid var(--card-border);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(99,102,241,0.10);
+            backdrop-filter: blur(var(--glass-blur));
+            padding: 2rem 2rem 1.5rem 2rem;
+            margin-bottom: 2rem;
+            transition: box-shadow 0.3s, border 0.3s, transform 0.2s;
         }
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 16px 48px rgba(99,102,241,0.18);
+            border-color: var(--primary);
+            transform: translateY(-4px) scale(1.01);
         }
-        .card-header {
+        .stSidebar {
+            background: linear-gradient(180deg, #232946 0%, #232946 100%);
+            border-right: 1.5px solid var(--card-border) !important;
+            box-shadow: 2px 0 24px rgba(99,102,241,0.08);
+            backdrop-filter: blur(var(--glass-blur));
+        }
+        .stSidebar .sidebar-content {
+            padding: 2.5rem 1.5rem 2rem 1.5rem;
+        }
+        .stSidebar .sidebar-section {
+            margin-bottom: 2.5rem;
+        }
+        .stSidebar .section-title {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        .card-title {
-            font-size: 1.5rem;
+            gap: 12px;
+            font-size: 1.15rem;
             font-weight: 700;
-            color: var(--light);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            color: var(--primary);
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1.5px solid var(--card-border);
         }
         .stButton>button {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             color: white;
-            padding: 0.8rem 1.5rem;
-            font-weight: 600;
-            font-size: 1rem;
+            padding: 1rem 2rem;
+            font-weight: 700;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            transition: all 0.3s;
+            box-shadow: 0 4px 18px rgba(99,102,241,0.18);
             width: 100%;
-            margin-top: 1rem;
+            margin-top: 1.2rem;
         }
         .stButton>button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 8px 32px rgba(99,102,241,0.25);
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent) 100%);
         }
         .stTextInput>div>div>input, .stSelectbox>div>div>select, 
         .stDateInput>div>div>input, .stTimeInput>div>div>input,
         .stNumberInput>div>div>input {
-            background: rgba(30, 41, 59, 0.7) !important;
-            border: 1px solid var(--card-border) !important;
+            background: rgba(30, 41, 59, 0.85) !important;
+            border: 1.5px solid var(--card-border) !important;
             color: var(--light) !important;
-            border-radius: 12px !important;
-            padding: 0.8rem 1rem !important;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            border-radius: 14px !important;
+            padding: 1rem 1.2rem !important;
+            font-size: 1.05rem;
+            transition: all 0.3s;
         }
         .stTextInput>div>div>input:focus, .stSelectbox>div>div>select:focus, 
         .stDateInput>div>div>input:focus, .stTimeInput>div>div>input:focus,
         .stNumberInput>div>div>input:focus {
             border-color: var(--primary) !important;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2) !important;
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.18) !important;
         }
         .stRadio>div {
             flex-direction: row !important;
-            gap: 2rem;
+            gap: 2.2rem;
         }
         .stRadio>div>label {
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(30, 41, 59, 0.5);
-            padding: 0.8rem 1.5rem;
-            border-radius: 12px;
-            border: 1px solid var(--card-border);
-            transition: all 0.3s ease;
+            gap: 10px;
+            background: rgba(30, 41, 59, 0.7);
+            padding: 1rem 2rem;
+            border-radius: 14px;
+            border: 1.5px solid var(--card-border);
+            transition: all 0.3s;
         }
         .stRadio>div>label:hover {
             border-color: var(--primary);
         }
         .stRadio>div>label[data-baseweb="radio"]>div:first-child {
-            background: rgba(30, 41, 59, 0.7) !important;
+            background: rgba(30, 41, 59, 0.85) !important;
             border-color: var(--card-border) !important;
         }
         .stRadio>div>label[data-baseweb="radio"]>div:first-child>div {
             background: var(--primary) !important;
         }
-        .stSidebar {
-            background: linear-gradient(180deg, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.8) 100%) !important;
-            backdrop-filter: blur(10px) !important;
-            border-right: 1px solid var(--card-border) !important;
-        }
-        .stSidebar .sidebar-content {
-            padding: 2rem 1.5rem;
-        }
-        .stSidebar .sidebar-section {
-            margin-bottom: 2rem;
-        }
-        .stSidebar .section-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--card-border);
-        }
-        footer {
-            background: linear-gradient(90deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.8) 100%);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-top: 1px solid var(--card-border);
-            margin-top: 3rem;
-        }
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-        .footer-section {
-            flex: 1;
-            min-width: 250px;
+        .stExpander {
+            background: var(--card-bg) !important;
+            border-radius: 18px !important;
+            border: 1.5px solid var(--card-border) !important;
+            box-shadow: 0 4px 18px rgba(99,102,241,0.10);
             margin-bottom: 1.5rem;
         }
-        .footer-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--light);
-            margin-bottom: 1rem;
-        }
-        .footer-links {
-            list-style: none;
-        }
-        .footer-links li {
-            margin-bottom: 0.5rem;
-        }
-        .footer-links a {
-            color: var(--gray);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        .footer-links a:hover {
+        .stExpanderHeader {
+            font-weight: 700;
             color: var(--primary);
         }
-        .copyright {
-            text-align: center;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--card-border);
-            margin-top: 1rem;
+        footer.modern-footer {
+            width: 100vw;
+            background: linear-gradient(90deg, #232946 0%, #6366f1 100%);
+            box-shadow: 0 -4px 24px rgba(99,102,241,0.10);
+            padding: 2rem 0 1rem 0;
+            margin-top: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modern-footer-content {
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
             color: var(--gray);
+            font-size: 1rem;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @media (max-width: 900px) {
+            .main-container {
+                padding: 0 1rem;
+            }
+            .modern-header-content, .modern-footer-content {
+                padding: 0 1rem;
+            }
         }
-        .animate-fade {
-            animation: fadeIn 0.6s ease-out forwards;
-        }
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        .delay-300 { animation-delay: 0.3s; }
-        .delay-400 { animation-delay: 0.4s; }
-        @media (max-width: 768px) {
-            .header-content {
+        @media (max-width: 600px) {
+            .main-container {
+                padding: 0 0.2rem;
+            }
+            .modern-header-content, .modern-footer-content {
                 flex-direction: column;
                 gap: 1rem;
-            }
-            .nav-links {
-                gap: 1rem;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            .footer-section {
-                min-width: 100%;
+                padding: 0 0.2rem;
             }
         }
     </style>
     """
     st.markdown(pro_css, unsafe_allow_html=True)
-    
-    # Hero Section (removed title and description)
+    # Main container (no hero section)
     st.markdown("""
     <div class="main-container">
-        <div class="hero animate-fade">
-        </div>
     """, unsafe_allow_html=True)
 
 # تبدیل تاریخ به فرمت آگاه از منطقه زمانی
@@ -373,6 +293,10 @@ def download_filtered_data(symbol, start_datetime, end_datetime, interval, timez
         interval=interval
     )
 
+    print('Columns after download:', data.columns)
+    if not data.empty:
+        print('Sample data after download:', data.head(3))
+
     data.index = pd.to_datetime(data.index)
 
     if timezone:
@@ -392,10 +316,24 @@ def download_filtered_data(symbol, start_datetime, end_datetime, interval, timez
         'Volume': f'Volume_{symbol}'
     }, inplace=True)
 
+    # Flatten MultiIndex columns if present
+    if isinstance(data.columns, pd.MultiIndex):
+        data.columns = ['_'.join([str(i) for i in col if i]) for col in data.columns.values]
+        print('Columns after flatten:', data.columns)
+        if not data.empty:
+            print('Sample data after flatten:', data.head(3))
+
+    # Find the first column that starts with 'Close' as the close_col
+    close_candidates = [col for col in data.columns if str(col).startswith('Close')]
+    if not close_candidates:
+        print('No Close column found in data!')
+        return data, None
+    close_col = close_candidates[0]
+
     if 'Adj Close' in data.columns:
         data.drop(columns=['Adj Close'], inplace=True)
 
-    return data
+    return data, close_col
 
 # یافتن قله‌ها و دره‌ها
 def find_peaks_valleys(residuals, window=5):
@@ -525,33 +463,49 @@ def compute_extrema_and_averages(residuals, method_type):
 # تابع اصلی تحلیل
 def run_analysis(symbol, start_date, start_hour, start_minute, end_date, end_hour, end_minute, interval, 
                  initial_state_mean, auto_initial_state, show_main, show_residual, show_orig_candle, show_filt_candle,
-                 method, uploaded_file=None):
+                 methods, uploaded_file=None):
     
     if uploaded_file is not None:
         try:
             with st.spinner('Processing uploaded data...'):
-                progress_bar = st.progress(0)
-                for percent_complete in range(100):
-                    time.sleep(0.01)
-                    progress_bar.progress(percent_complete + 1)
-                
-                data = pd.read_csv(uploaded_file, index_col=0, parse_dates=True)
+                data, close_col = pd.read_csv(uploaded_file, index_col=0, parse_dates=True)
                 data.index = pd.to_datetime(data.index, errors='coerce')
                 data = data[~data.index.isna()]
                 
-                close_col = None
-                for col in data.columns:
-                    if 'close' in col.lower():
-                        close_col = col
-                        break
-                
-                if close_col is None:
-                    st.error("❌ Close column not found in file")
-                    return
-                    
                 for col in data.columns:
                     data[col] = pd.to_numeric(data[col], errors='coerce')
                 data.dropna(subset=[close_col], inplace=True)
+                
+                # Ensure close_col is a string and data[close_col] is a Series
+                if isinstance(close_col, list):
+                    close_col = close_col[0]
+                if isinstance(data[close_col], pd.DataFrame):
+                    if data[close_col].shape[1] == 1:
+                        only_col = data[close_col].columns[0]
+                        # تغییر close_col به نام واقعی ستون
+                        close_col = only_col
+                        data[close_col] = data[close_col][only_col]
+                    else:
+                        st.error(
+                            f"""
+                            ❌ Multiple columns found for {close_col}: {list(data[close_col].columns)}
+                            \nType: {type(data[close_col])}
+                            \nShape: {data[close_col].shape}
+                            \nColumns: {data[close_col].columns}
+                            \nSample data:\n{data[close_col].head(3).to_string()}
+                            """
+                        )
+                        print('close_col:', close_col)
+                        print('data[close_col] type:', type(data[close_col]))
+                        print('data[close_col] columns:', data[close_col].columns)
+                        print('data[close_col] shape:', data[close_col].shape)
+                        print('data[close_col] sample:', data[close_col].head(3))
+                        return
+                
+                # Check if data is empty after processing
+                if data is None or data.empty:
+                    st.error("❌ Uploaded file is empty or invalid.")
+                    return
                 
                 st.success("✅ Data processed successfully")
         except Exception as e:
@@ -567,223 +521,183 @@ def run_analysis(symbol, start_date, start_hour, start_minute, end_date, end_hou
 
         try:
             with st.spinner(f'Downloading {symbol} data from Yahoo Finance...'):
-                progress_bar = st.progress(0)
-                for percent_complete in range(100):
-                    time.sleep(0.01)
-                    progress_bar.progress(percent_complete + 1)
-                
-                data = download_filtered_data(symbol, start_datetime, end_datetime, interval, timezone)
-                close_col = f'Close_{symbol}'
+                data, close_col = download_filtered_data(symbol, start_datetime, end_datetime, interval, timezone)
+                # Check if data is empty after download
+                if data is None or data.empty or close_col is None:
+                    st.error("❌ No data was downloaded or no Close column found. Please check the symbol, date range, or your internet connection.")
+                    return
+                # Ensure close_col is a string and data[close_col] is a Series
+                if isinstance(close_col, list):
+                    close_col = close_col[0]
+                if isinstance(data[close_col], pd.DataFrame):
+                    if data[close_col].shape[1] == 1:
+                        only_col = data[close_col].columns[0]
+                        close_col = only_col
+                        data[close_col] = data[close_col][only_col]
+                    else:
+                        st.error(
+                            f"""
+                            ❌ Multiple columns found for {close_col}: {list(data[close_col].columns)}
+                            \nType: {type(data[close_col])}
+                            \nShape: {data[close_col].shape}
+                            \nColumns: {data[close_col].columns}
+                            \nSample data:\n{data[close_col].head(3).to_string()}
+                            """
+                        )
+                        print('close_col:', close_col)
+                        print('data[close_col] type:', type(data[close_col]))
+                        print('data[close_col] columns:', data[close_col].columns)
+                        print('data[close_col] shape:', data[close_col].shape)
+                        print('data[close_col] sample:', data[close_col].head(3))
+                        return
                 st.success(f"✅ Data for {symbol} downloaded successfully")
         except Exception as e:
             st.error(f"Error downloading data: {e}")
             return
 
     # مقداردهی اولیه initial_state_mean برای هر دو حالت Yahoo و آپلود فایل
-    if (method == 'Kalman' or method == 'Kalman+Wavelet') and len(data) > 0:
+    if (methods[0] == 'Kalman' or methods[0] == 'Kalman+Wavelet') and len(data) > 0:
+        print('--- DEBUG: Data columns after load:', data.columns)
+        print('--- DEBUG: type(data):', type(data))
+        print('--- DEBUG: close_col:', close_col)
+        if close_col in data:
+            print('--- DEBUG: type(data[close_col]):', type(data[close_col]))
+        print('--- DEBUG: Sample data after load:', data.head(3))
         if auto_initial_state:
             initial_state_mean = data[close_col].iloc[0]
         # else: مقدار initial_state_mean همان مقدار ورودی کاربر باقی می‌ماند
+        # Ensure initial_state_mean is always a float and not a Series
+        if isinstance(initial_state_mean, pd.Series):
+            initial_state_mean = float(initial_state_mean.iloc[0])
+        else:
+            initial_state_mean = float(initial_state_mean)
 
-    # تحلیل بر اساس روش انتخابی
-    analysis_method = method
-    with st.spinner(f'Running {analysis_method} analysis...'):
-        progress_bar = st.progress(0)
-        for percent_complete in range(100):
-            time.sleep(0.02)
-            progress_bar.progress(percent_complete + 1)
-        
-        if method == 'Kalman':
-            try:
-                observations = data[close_col].values.reshape(-1, 1)
-                kf = KalmanFilter(
-                    transition_matrices=[[1.0, 1.0], [0.0, 1.0]],
-                    observation_matrices=[[1.0, 0.0]],
-                    initial_state_mean=[initial_state_mean, 0.0],
-                    n_dim_state=2,
-                    n_dim_obs=1
-                )
-                kf = kf.em(observations, n_iter=70)
-                state_means, _ = kf.filter(observations)
-                filtered_close = state_means[:, 0]
-                data['Filtered_Close'] = filtered_close
-                data['Residual'] = data[close_col] - data['Filtered_Close']
-                method_name = 'Kalman'
-            except Exception as e:
-                st.error(f"Error applying Kalman filter: {e}")
-                return
-        
-        elif method == 'Wavelet':
-            try:
-                signal = data[close_col].values.flatten()
-                trend, best_wavelet, level = compute_wavelet_trend(signal)
-                data['Filtered_Close'] = trend
-                data['Residual'] = data[close_col] - data['Filtered_Close']
-                method_name = f'Wavelet ({best_wavelet}, level: {level})'
-            except Exception as e:
-                st.error(f"Error in wavelet analysis: {e}")
-                return
-                
-        elif method == 'Kalman+Wavelet':
-            try:
-                observations = data[close_col].values.reshape(-1, 1)
-                kf = KalmanFilter(
-                    transition_matrices=[[1.0, 1.0], [0.0, 1.0]],
-                    observation_matrices=[[1.0, 0.0]],
-                    initial_state_mean=[initial_state_mean, 0.0],
-                    n_dim_state=2,
-                    n_dim_obs=1
-                )
-                kf = kf.em(observations, n_iter=70)
-                state_means, _ = kf.filter(observations)
-                kalman_filtered = state_means[:, 0]
-                data['Kalman_Filtered'] = kalman_filtered
-                data['Kalman_Residual'] = data[close_col] - kalman_filtered
-                
-                signal = data[close_col].values.flatten()
-                wavelet_trend, best_wavelet, level = compute_wavelet_trend(signal)
-                data['Wavelet_Filtered'] = wavelet_trend
-                data['Wavelet_Residual'] = data[close_col] - wavelet_trend
-                
-                method_name = 'Kalman + Wavelet'
-            except Exception as e:
-                st.error(f"Error in combined analysis: {e}")
-                return
+    results_by_method = {}
+    for method in methods:
+        analysis_method = method
+        with st.spinner(f'Running {analysis_method} analysis...'):
+            if method == 'Kalman':
+                try:
+                    observations = data[close_col].values.reshape(-1, 1)
+                    kf = KalmanFilter(
+                        transition_matrices=[[1.0, 1.0], [0.0, 1.0]],
+                        observation_matrices=[[1.0, 0.0]],
+                        initial_state_mean=[initial_state_mean, 0.0],
+                        n_dim_state=2,
+                        n_dim_obs=1
+                    )
+                    kf = kf.em(observations, n_iter=70)
+                    state_means, _ = kf.filter(observations)
+                    filtered_close = state_means[:, 0]
+                    filtered_col = f'Filtered_Close_{method}'
+                    residual_col = f'Residual_{method}'
+                    data[filtered_col] = filtered_close
+                    data[residual_col] = data[close_col] - data[filtered_col]
+                    method_name = 'Kalman'
+                    results_by_method[method] = {
+                        'method_name': method_name,
+                        'filtered_col': filtered_col,
+                        'residual_col': residual_col,
+                    }
+                except Exception as e:
+                    st.error(f"Error applying Kalman filter: {e}")
+                    return
+            elif method == 'Wavelet':
+                try:
+                    signal = data[close_col].values.flatten()
+                    trend, best_wavelet, level = compute_wavelet_trend(signal)
+                    filtered_col = f'Filtered_Close_{method}'
+                    residual_col = f'Residual_{method}'
+                    data[filtered_col] = trend
+                    data[residual_col] = data[close_col] - data[filtered_col]
+                    method_name = f'Wavelet ({best_wavelet}, level: {level})'
+                    results_by_method[method] = {
+                        'method_name': method_name,
+                        'filtered_col': filtered_col,
+                        'residual_col': residual_col,
+                    }
+                except Exception as e:
+                    st.error(f"Error in wavelet analysis: {e}")
+                    return
+            elif method == 'Kalman+Wavelet':
+                try:
+                    observations = data[close_col].values.reshape(-1, 1)
+                    kf = KalmanFilter(
+                        transition_matrices=[[1.0, 1.0], [0.0, 1.0]],
+                        observation_matrices=[[1.0, 0.0]],
+                        initial_state_mean=[initial_state_mean, 0.0],
+                        n_dim_state=2,
+                        n_dim_obs=1
+                    )
+                    kf = kf.em(observations, n_iter=70)
+                    state_means, _ = kf.filter(observations)
+                    kalman_filtered_col = f'Kalman_Filtered_{method}'
+                    kalman_residual_col = f'Kalman_Residual_{method}'
+                    data[kalman_filtered_col] = state_means[:, 0]
+                    data[kalman_residual_col] = data[close_col] - data[kalman_filtered_col]
+                    signal = data[close_col].values.flatten()
+                    wavelet_trend, best_wavelet, level = compute_wavelet_trend(signal)
+                    wavelet_filtered_col = f'Wavelet_Filtered_{method}'
+                    wavelet_residual_col = f'Wavelet_Residual_{method}'
+                    data[wavelet_filtered_col] = wavelet_trend
+                    data[wavelet_residual_col] = data[close_col] - data[wavelet_filtered_col]
+                    method_name = 'Kalman + Wavelet'
+                    results_by_method[method] = {
+                        'method_name': method_name,
+                        'kalman_filtered_col': kalman_filtered_col,
+                        'kalman_residual_col': kalman_residual_col,
+                        'wavelet_filtered_col': wavelet_filtered_col,
+                        'wavelet_residual_col': wavelet_residual_col,
+                    }
+                except Exception as e:
+                    st.error(f"Error in combined analysis: {e}")
+                    return
 
     # نمایش نمودارها
-    if show_main:
-        with st.expander("📈 Price Analysis", expanded=True):
-            fig_main = go.Figure()
-            fig_main.add_trace(go.Scatter(
-                x=data.index,
-                y=data[close_col],
-                mode='lines',
-                name='Actual Price',
-                line=dict(color='#6366f1', width=1.5)
-            ))
-            
-            if method == 'Kalman+Wavelet':
+    for method in methods:
+        method_data = results_by_method[method]
+        method_name = method_data['method_name']
+        if show_main:
+            with st.expander(f"📈 Price Analysis - {method}", expanded=True):
+                fig_main = go.Figure()
                 fig_main.add_trace(go.Scatter(
                     x=data.index,
-                    y=data['Kalman_Filtered'],
+                    y=data[close_col],
                     mode='lines',
-                    name='Trend (Kalman)',
-                    line=dict(color='#10b981', width=2.5)
+                    name='Actual Price',
+                    line=dict(color='#6366f1', width=1.5)
                 ))
-                fig_main.add_trace(go.Scatter(
-                    x=data.index,
-                    y=data['Wavelet_Filtered'],
-                    mode='lines',
-                    name='Trend (Wavelet)',
-                    line=dict(color='#8b5cf6', width=2.5)
-                ))
-            else:
-                fig_main.add_trace(go.Scatter(
-                    x=data.index,
-                    y=data['Filtered_Close'],
-                    mode='lines',
-                    name=f'Trend ({method_name})',
-                    line=dict(color='#10b981', width=2.5)
-                ))
-                
-            fig_main.update_layout(
-                title=f'Price Chart for {symbol}',
-                xaxis_title='Date',
-                yaxis_title='Price',
-                height=500,
-                template='plotly_dark',
-                legend=dict(
-                    orientation="h",
-                    yanchor="bottom",
-                    y=1.02,
-                    xanchor="right",
-                    x=1
-                )
-            )
-            st.plotly_chart(fig_main, use_container_width=True)
-
-    if show_residual:
-        with st.expander("📊 Residual Analysis", expanded=True):
-            if method == 'Kalman+Wavelet':
-                fig_res = make_subplots(specs=[[{"secondary_y": True}]])
-                
-                kalman_residuals = data['Kalman_Residual'].values
-                kalman_results = compute_extrema_and_averages(kalman_residuals, 'kalman')
-                
-                fig_res.add_trace(go.Scatter(
-                    x=data.index,
-                    y=kalman_residuals,
-                    mode='lines',
-                    name='Kalman Residual',
-                    line=dict(color='#10b981', width=2)
-                ), secondary_y=False)
-                
-                if len(kalman_results['filtered_peaks_idx']) > 0:
-                    fig_res.add_trace(go.Scatter(
-                        x=data.index[kalman_results['filtered_peaks_idx']],
-                        y=kalman_results['filtered_peaks'],
-                        mode='markers',
-                        name='Kalman Filtered Peak',
-                        marker=dict(color='#10b981', size=10, symbol='triangle-up')
-                    ), secondary_y=False)
-                
-                if len(kalman_results['filtered_valleys_idx']) > 0:
-                    fig_res.add_trace(go.Scatter(
-                        x=data.index[kalman_results['filtered_valleys_idx']],
-                        y=kalman_results['filtered_valleys'],
-                        mode='markers',
-                        name='Kalman Filtered Valley',
-                        marker=dict(color='#10b981', size=10, symbol='triangle-down')
-                    ), secondary_y=False)
-                
-                fig_res.add_hline(
-                    y=kalman_results['mean_peak'], 
-                    line=dict(color='#10b981', width=2, dash='dash'),
-                    annotation_text=f"Kalman Peak Avg: {kalman_results['mean_peak']:.4f}",
-                    secondary_y=False
-                )
-                
-                wavelet_residuals = data['Wavelet_Residual'].values
-                wavelet_results = compute_extrema_and_averages(wavelet_residuals, 'wavelet')
-                
-                fig_res.add_trace(go.Scatter(
-                    x=data.index,
-                    y=wavelet_residuals,
-                    mode='lines',
-                    name='Wavelet Residual',
-                    line=dict(color='#8b5cf6', width=2)
-                ), secondary_y=True)
-                
-                if len(wavelet_results['filtered_peaks_idx']) > 0:
-                    fig_res.add_trace(go.Scatter(
-                        x=data.index[wavelet_results['filtered_peaks_idx']],
-                        y=wavelet_results['filtered_peaks'],
-                        mode='markers',
-                        name='Wavelet Filtered Peak',
-                        marker=dict(color='#8b5cf6', size=10, symbol='triangle-up')
-                    ), secondary_y=True)
-                
-                if len(wavelet_results['filtered_valleys_idx']) > 0:
-                    fig_res.add_trace(go.Scatter(
-                        x=data.index[wavelet_results['filtered_valleys_idx']],
-                        y=wavelet_results['filtered_valleys'],
-                        mode='markers',
-                        name='Wavelet Filtered Valley',
-                        marker=dict(color='#8b5cf6', size=10, symbol='triangle-down')
-                    ), secondary_y=True)
-                
-                fig_res.add_hline(
-                    y=wavelet_results['mean_peak'], 
-                    line=dict(color='#8b5cf6', width=2, dash='dash'),
-                    annotation_text=f"Wavelet Peak Avg: {wavelet_results['mean_peak']:.4f}",
-                    secondary_y=True
-                )
-                
-                fig_res.update_layout(
-                    title=f'Combined Residual Analysis',
+                if method == 'Kalman+Wavelet':
+                    fig_main.add_trace(go.Scatter(
+                        x=data.index,
+                        y=data[method_data['kalman_filtered_col']],
+                        mode='lines',
+                        name='Trend (Kalman)',
+                        line=dict(color='#10b981', width=2.5)
+                    ))
+                    fig_main.add_trace(go.Scatter(
+                        x=data.index,
+                        y=data[method_data['wavelet_filtered_col']],
+                        mode='lines',
+                        name='Trend (Wavelet)',
+                        line=dict(color='#8b5cf6', width=2.5)
+                    ))
+                else:
+                    fig_main.add_trace(go.Scatter(
+                        x=data.index,
+                        y=data[method_data['filtered_col']],
+                        mode='lines',
+                        name=f'Trend ({method_name})',
+                        line=dict(color='#10b981', width=2.5)
+                    ))
+                fig_main.update_layout(
+                    title=f'Price Chart for {symbol}',
                     xaxis_title='Date',
-                    height=600,
+                    yaxis_title='Price',
+                    height=500,
                     template='plotly_dark',
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    paper_bgcolor='rgba(0,0,0,0)',
                     legend=dict(
                         orientation="h",
                         yanchor="bottom",
@@ -792,155 +706,233 @@ def run_analysis(symbol, start_date, start_hour, start_minute, end_date, end_hou
                         x=1
                     )
                 )
-                fig_res.update_yaxes(title_text="Kalman Residual", secondary_y=False)
-                fig_res.update_yaxes(title_text="Wavelet Residual", secondary_y=True)
+                st.plotly_chart(fig_main, use_container_width=True)
+        if show_residual:
+            with st.expander(f"📊 Residual Analysis - {method}", expanded=True):
+                if method == 'Kalman+Wavelet':
+                    fig_res = make_subplots(specs=[[{"secondary_y": True}]])
+                    kalman_residuals = data[method_data['kalman_residual_col']].values
+                    kalman_results = compute_extrema_and_averages(kalman_residuals, 'kalman')
+                    fig_res.add_trace(go.Scatter(
+                        x=data.index,
+                        y=kalman_residuals,
+                        mode='lines',
+                        name='Kalman Residual',
+                        line=dict(color='#10b981', width=2)
+                    ), secondary_y=False)
+                    if len(kalman_results['filtered_peaks_idx']) > 0:
+                        fig_res.add_trace(go.Scatter(
+                            x=data.index[kalman_results['filtered_peaks_idx']],
+                            y=kalman_results['filtered_peaks'],
+                            mode='markers',
+                            name='Kalman Filtered Peak',
+                            marker=dict(color='#10b981', size=10, symbol='triangle-up')
+                        ), secondary_y=False)
+                    if len(kalman_results['filtered_valleys_idx']) > 0:
+                        fig_res.add_trace(go.Scatter(
+                            x=data.index[kalman_results['filtered_valleys_idx']],
+                            y=kalman_results['filtered_valleys'],
+                            mode='markers',
+                            name='Kalman Filtered Valley',
+                            marker=dict(color='#10b981', size=10, symbol='triangle-down')
+                        ), secondary_y=False)
+                    fig_res.add_hline(
+                        y=kalman_results['mean_peak'], 
+                        line=dict(color='#10b981', width=2, dash='dash'),
+                        annotation_text=f"Kalman Peak Avg: {kalman_results['mean_peak']:.4f}",
+                        secondary_y=False
+                    )
+                    wavelet_residuals = data[method_data['wavelet_residual_col']].values
+                    wavelet_results = compute_extrema_and_averages(wavelet_residuals, 'wavelet')
+                    fig_res.add_trace(go.Scatter(
+                        x=data.index,
+                        y=wavelet_residuals,
+                        mode='lines',
+                        name='Wavelet Residual',
+                        line=dict(color='#8b5cf6', width=2)
+                    ), secondary_y=True)
+                    if len(wavelet_results['filtered_peaks_idx']) > 0:
+                        fig_res.add_trace(go.Scatter(
+                            x=data.index[wavelet_results['filtered_peaks_idx']],
+                            y=wavelet_results['filtered_peaks'],
+                            mode='markers',
+                            name='Wavelet Filtered Peak',
+                            marker=dict(color='#8b5cf6', size=10, symbol='triangle-up')
+                        ), secondary_y=True)
+                    if len(wavelet_results['filtered_valleys_idx']) > 0:
+                        fig_res.add_trace(go.Scatter(
+                            x=data.index[wavelet_results['filtered_valleys_idx']],
+                            y=wavelet_results['filtered_valleys'],
+                            mode='markers',
+                            name='Wavelet Filtered Valley',
+                            marker=dict(color='#8b5cf6', size=10, symbol='triangle-down')
+                        ), secondary_y=True)
+                    fig_res.add_hline(
+                        y=wavelet_results['mean_peak'], 
+                        line=dict(color='#8b5cf6', width=2, dash='dash'),
+                        annotation_text=f"Wavelet Peak Avg: {wavelet_results['mean_peak']:.4f}",
+                        secondary_y=True
+                    )
+                    fig_res.update_layout(
+                        title=f'Combined Residual Analysis',
+                        xaxis_title='Date',
+                        height=600,
+                        template='plotly_dark',
+                        plot_bgcolor='rgba(0,0,0,0)',
+                        paper_bgcolor='rgba(0,0,0,0)',
+                        legend=dict(
+                            orientation="h",
+                            yanchor="bottom",
+                            y=1.02,
+                            xanchor="right",
+                            x=1
+                        )
+                    )
+                    fig_res.update_yaxes(title_text="Kalman Residual", secondary_y=False)
+                    fig_res.update_yaxes(title_text="Wavelet Residual", secondary_y=True)
+                    st.plotly_chart(fig_res, use_container_width=True)
+                else:
+                    residuals = data[method_data['residual_col']].values
+                    results = compute_extrema_and_averages(residuals, method.lower())
+                    RESIDUAL_COLOR = '#6366f1'
+                    FILTERED_PEAK_COLOR = '#10b981'
+                    FILTERED_VALLEY_COLOR = '#ec4899'
+                    MEAN_PEAK_COLOR = '#10b981'
+                    MEAN_VALLEY_COLOR = '#ec4899'
+                    HIGH_PEAK_COLOR = '#06b6d4'
+                    LOW_VALLEY_COLOR = '#f97316'
+                    ZERO_LINE_COLOR = '#ffffff'
+                    fig_res = go.Figure()
+                    fig_res.add_trace(go.Scatter(
+                        x=data.index,
+                        y=data[method_data['residual_col']],
+                        mode='lines',
+                        name='Residual',
+                        line=dict(color=RESIDUAL_COLOR, width=2)
+                    ))
+                    fig_res.add_shape(type='line', x0=data.index[0], x1=data.index[-1], y0=0, y1=0, 
+                                    line=dict(color=ZERO_LINE_COLOR, dash='dot', width=1.5))
+                    if len(results['filtered_peaks_idx']) > 0:
+                        fig_res.add_trace(go.Scatter(
+                            x=data.index[results['filtered_peaks_idx']],
+                            y=results['filtered_peaks'],
+                            mode='markers',
+                            name='Filtered Peak',
+                            marker=dict(color=FILTERED_PEAK_COLOR, size=10, symbol='triangle-up')
+                        ))
+                    if len(results['filtered_valleys_idx']) > 0:
+                        fig_res.add_trace(go.Scatter(
+                            x=data.index[results['filtered_valleys_idx']],
+                            y=results['filtered_valleys'],
+                            mode='markers',
+                            name='Filtered Valley',
+                            marker=dict(color=FILTERED_VALLEY_COLOR, size=10, symbol='triangle-down')
+                        ))
+                    fig_res.add_hline(
+                        y=results['mean_peak'], 
+                        line=dict(color=MEAN_PEAK_COLOR, width=2.5, dash='dash'),
+                        annotation_text=f"Primary Peak Avg: {results['mean_peak']:.4f}"
+                    )
+                    fig_res.add_hline(
+                        y=results['mean_valley'], 
+                        line=dict(color=MEAN_VALLEY_COLOR, width=2.5, dash='dash'),
+                        annotation_text=f"Primary Valley Avg: {results['mean_valley']:.4f}"
+                    )
+                    fig_res.update_layout(
+                        title=f'Residual Analysis ({method_name})',
+                        xaxis_title='Date',
+                        yaxis_title='Residual Value',
+                        height=600,
+                        template='plotly_dark',
+                        plot_bgcolor='rgba(0,0,0,0)',
+                        paper_bgcolor='rgba(0,0,0,0)'
+                    )
+                    st.plotly_chart(fig_res, use_container_width=True)
+        if show_orig_candle:
+            with st.expander(f"🟢 Original Candlestick - {method}", expanded=True):
+                open_col = None
+                high_col = None
+                low_col = None
                 
-                st.plotly_chart(fig_res, use_container_width=True)
+                for col in data.columns:
+                    col_lower = col.lower()
+                    if 'open' in col_lower:
+                        open_col = col
+                    elif 'high' in col_lower:
+                        high_col = col
+                    elif 'low' in col_lower:
+                        low_col = col
                 
-            else:
-                residuals = data['Residual'].values
-                results = compute_extrema_and_averages(residuals, method.lower())
-                
-                RESIDUAL_COLOR = '#6366f1'
-                FILTERED_PEAK_COLOR = '#10b981'
-                FILTERED_VALLEY_COLOR = '#ec4899'
-                MEAN_PEAK_COLOR = '#10b981'
-                MEAN_VALLEY_COLOR = '#ec4899'
-                HIGH_PEAK_COLOR = '#06b6d4'
-                LOW_VALLEY_COLOR = '#f97316'
-                ZERO_LINE_COLOR = '#ffffff'
+                if open_col is None:
+                    open_col = close_col
+                if high_col is None:
+                    high_col = close_col
+                if low_col is None:
+                    low_col = close_col
 
-                fig_res = go.Figure()
-                fig_res.add_trace(go.Scatter(
+                fig_candle_orig = go.Figure(data=[go.Candlestick(
                     x=data.index,
-                    y=data['Residual'],
-                    mode='lines',
-                    name='Residual',
-                    line=dict(color=RESIDUAL_COLOR, width=2)
-                ))
-                fig_res.add_shape(type='line', x0=data.index[0], x1=data.index[-1], y0=0, y1=0, 
-                                line=dict(color=ZERO_LINE_COLOR, dash='dot', width=1.5))
-                
-                if len(results['filtered_peaks_idx']) > 0:
-                    fig_res.add_trace(go.Scatter(
-                        x=data.index[results['filtered_peaks_idx']],
-                        y=results['filtered_peaks'],
-                        mode='markers',
-                        name='Filtered Peak',
-                        marker=dict(color=FILTERED_PEAK_COLOR, size=10, symbol='triangle-up')
-                    ))
-                
-                if len(results['filtered_valleys_idx']) > 0:
-                    fig_res.add_trace(go.Scatter(
-                        x=data.index[results['filtered_valleys_idx']],
-                        y=results['filtered_valleys'],
-                        mode='markers',
-                        name='Filtered Valley',
-                        marker=dict(color=FILTERED_VALLEY_COLOR, size=10, symbol='triangle-down')
-                    ))
-                
-                fig_res.add_hline(
-                    y=results['mean_peak'], 
-                    line=dict(color=MEAN_PEAK_COLOR, width=2.5, dash='dash'),
-                    annotation_text=f"Primary Peak Avg: {results['mean_peak']:.4f}"
-                )
-                
-                fig_res.add_hline(
-                    y=results['mean_valley'], 
-                    line=dict(color=MEAN_VALLEY_COLOR, width=2.5, dash='dash'),
-                    annotation_text=f"Primary Valley Avg: {results['mean_valley']:.4f}"
-                )
-                
-                fig_res.update_layout(
-                    title=f'Residual Analysis ({method_name})',
+                    open=data[open_col],
+                    high=data[high_col],
+                    low=data[low_col],
+                    close=data[close_col],
+                    increasing_line_color='#10b981',
+                    decreasing_line_color='#ef4444',
+                    name='Original'
+                )])
+                fig_candle_orig.update_layout(
+                    title=f'Original Candlestick for {symbol}',
                     xaxis_title='Date',
-                    yaxis_title='Residual Value',
-                    height=600,
-                    template='plotly_dark'
+                    yaxis_title='Price',
+                    height=500,
+                    template='plotly_dark',
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    paper_bgcolor='rgba(0,0,0,0)'
                 )
-                st.plotly_chart(fig_res, use_container_width=True)
+                st.plotly_chart(fig_candle_orig, use_container_width=True)
 
-    if show_orig_candle:
-        with st.expander("🟢 Original Candlestick", expanded=True):
-            open_col = None
-            high_col = None
-            low_col = None
-            
-            for col in data.columns:
-                col_lower = col.lower()
-                if 'open' in col_lower:
-                    open_col = col
-                elif 'high' in col_lower:
-                    high_col = col
-                elif 'low' in col_lower:
-                    low_col = col
-            
-            if open_col is None:
-                open_col = close_col
-            if high_col is None:
-                high_col = close_col
-            if low_col is None:
-                low_col = close_col
+        if show_filt_candle and method != 'Kalman+Wavelet':
+            with st.expander(f"🔵 Filtered Candlestick - {method}", expanded=True):
+                open_col = None
+                high_col = None
+                low_col = None
+                
+                for col in data.columns:
+                    col_lower = col.lower()
+                    if 'open' in col_lower:
+                        open_col = col
+                    elif 'high' in col_lower:
+                        high_col = col
+                    elif 'low' in col_lower:
+                        low_col = col
+                
+                if open_col is None:
+                    open_col = close_col
+                if high_col is None:
+                    high_col = close_col
+                if low_col is None:
+                    low_col = close_col
 
-            fig_candle_orig = go.Figure(data=[go.Candlestick(
-                x=data.index,
-                open=data[open_col],
-                high=data[high_col],
-                low=data[low_col],
-                close=data[close_col],
-                increasing_line_color='#10b981',
-                decreasing_line_color='#ef4444',
-                name='Original'
-            )])
-            fig_candle_orig.update_layout(
-                title=f'Original Candlestick for {symbol}',
-                xaxis_title='Date',
-                yaxis_title='Price',
-                height=500,
-                template='plotly_dark'
-            )
-            st.plotly_chart(fig_candle_orig, use_container_width=True)
-
-    if show_filt_candle and method != 'Kalman+Wavelet':
-        with st.expander("🔵 Filtered Candlestick", expanded=True):
-            open_col = None
-            high_col = None
-            low_col = None
-            
-            for col in data.columns:
-                col_lower = col.lower()
-                if 'open' in col_lower:
-                    open_col = col
-                elif 'high' in col_lower:
-                    high_col = col
-                elif 'low' in col_lower:
-                    low_col = col
-            
-            if open_col is None:
-                open_col = close_col
-            if high_col is None:
-                high_col = close_col
-            if low_col is None:
-                low_col = close_col
-
-            fig_candle_filt = go.Figure(data=[go.Candlestick(
-                x=data.index,
-                open=data[open_col],
-                high=data[high_col],
-                low=data[low_col],
-                close=data['Filtered_Close'] if method != 'Kalman+Wavelet' else data['Kalman_Filtered'],
-                increasing_line_color='#0ea5e9',
-                decreasing_line_color='#f59e0b',
-                name='Filtered'
-            )])
-            fig_candle_filt.update_layout(
-                title=f'Filtered Candlestick for {symbol}',
-                xaxis_title='Date',
-                yaxis_title='Price',
-                height=500,
-                template='plotly_dark'
-            )
-            st.plotly_chart(fig_candle_filt, use_container_width=True)
+                fig_candle_filt = go.Figure(data=[go.Candlestick(
+                    x=data.index,
+                    open=data[open_col],
+                    high=data[high_col],
+                    low=data[low_col],
+                    close=data[method_data['filtered_col']] if method != 'Kalman+Wavelet' else data[method_data['kalman_filtered_col']],
+                    increasing_line_color='#0ea5e9',
+                    decreasing_line_color='#f59e0b',
+                    name='Filtered'
+                )])
+                fig_candle_filt.update_layout(
+                    title=f'Filtered Candlestick for {symbol}',
+                    xaxis_title='Date',
+                    yaxis_title='Price',
+                    height=500,
+                    template='plotly_dark',
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    paper_bgcolor='rgba(0,0,0,0)'
+                )
+                st.plotly_chart(fig_candle_filt, use_container_width=True)
 
 # تابع نمایش ویجت‌های TradingView
 def show_tradingview_widgets():
@@ -1229,7 +1221,12 @@ def main():
             </div>
         """, unsafe_allow_html=True)
         
-        method = st.selectbox('Method', ['Kalman', 'Wavelet', 'Kalman+Wavelet'], index=0, label_visibility="collapsed")
+        methods = st.multiselect(
+            'Select Analysis Methods',
+            ['Kalman', 'Wavelet', 'Kalman+Wavelet'],
+            default=['Kalman', 'Wavelet'],
+            label_visibility="collapsed"
+        )
         
         st.markdown("""
             <div class="section-title">
@@ -1256,7 +1253,7 @@ def main():
         chart_options = st.multiselect(
             'Select Charts to Display',
             ['Main Chart', 'Residual Chart', 'Candles', 'Filtered Candles', 'TradingView'],
-            default=['Residual Chart', 'TradingView'],
+            default=['Residual Chart'],
             label_visibility="collapsed"
         )
         
@@ -1286,7 +1283,7 @@ def main():
                 'Residual Chart' in chart_options,
                 'Candles' in chart_options,
                 'Filtered Candles' in chart_options,
-                method,
+                methods,
                 uploaded_file=None
             )
         else:
@@ -1299,7 +1296,7 @@ def main():
                 'Residual Chart' in chart_options,
                 'Candles' in chart_options,
                 'Filtered Candles' in chart_options,
-                method,
+                methods,
                 uploaded_file=uploaded_file
             )
         # نمایش ویجت TradingView اگر انتخاب شده باشد
